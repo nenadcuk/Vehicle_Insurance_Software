@@ -1,4 +1,8 @@
-public class MainClass {
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+
+public class MainScreen extends JFrame {
     /**This is an application for a vehicle insurance company.
      * The app must manage the information and operations applied in these types of companies:
         * Data entry
@@ -55,5 +59,64 @@ public class MainClass {
             3. Processing and analyzing transactions, their deadlines, conditions and amounts
             4. Displaying document: policy, claim, settlement, inventories, receipts...**/
 
+    // Customization
+    Font myFont = new Font("SansSerif", Font.BOLD, 20);
+    Color myColor = Color.GRAY;
+
+    // Panel 1
+    JTextField subFName;
+    JTextField subLName;
+    JTextField subCity;
+    JTextField subPhone;
+
+    // Constructor
+    public MainScreen(){
+        CustomizePanel1();
+    }
+
+    private void CustomizePanel1() {
+        JPanel p1 = new JPanel();
+        TitledBorder titledBorder = BorderFactory.createTitledBorder
+                (BorderFactory.createLineBorder(Color.GRAY, 1),
+                "  Customer  ", TitledBorder.CENTER,
+                TitledBorder.DEFAULT_POSITION,
+                myFont, myColor);
+
+        p1.setBorder(titledBorder);
+
+        JLabel fNameLBL = new JLabel(" First Name");
+        JLabel lNameLBL = new JLabel(" Last Name");
+        JLabel cityLBL = new JLabel(" City");
+        JLabel phoneLBL = new JLabel(" Phone");
+
+        subFName = new JTextField();      subFName.setOpaque(false);
+        subLName = new JTextField();      subLName.setOpaque(false);
+        subCity  = new JTextField();      subCity.setOpaque(false);
+        subPhone = new JTextField();      subPhone.setOpaque(false);
+
+        p1.add(fNameLBL);
+        p1.add(subFName);
+        p1.add(lNameLBL);
+        p1.add(subLName);
+        p1.add(cityLBL);
+        p1.add(subCity);
+        p1.add(phoneLBL);
+        p1.add(subPhone);
+
+        p1.setBounds(15, 15, 300, 200);
+        p1.setLayout(new GridLayout(4, 2));
+
+        // Adding panels to JFrame
+        setLayout(null);
+        add(p1);
+    }
+
+    public static void main(String[] args){
+        MainScreen mainScreen = new MainScreen();
+        mainScreen.setVisible(true);
+        mainScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainScreen.setTitle("Insurance Company System");
+        mainScreen.setBounds(0, 0, 1920, 1080);
+    }
 
 }
