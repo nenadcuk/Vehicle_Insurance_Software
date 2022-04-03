@@ -1,6 +1,8 @@
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 public class MainScreen extends JFrame {
     /**This is an application for a vehicle insurance company.
@@ -80,10 +82,22 @@ public class MainScreen extends JFrame {
     JRadioButton damageRadio4;
     ButtonGroup G1;
 
+    // Panel 3
+    JCheckBox obligatoryCHKBX;
+    JCheckBox allRiskCHKBX;
+    JCheckBox vDamageCHKBX;
+    JCheckBox dDamageCHKBX;
+    JCheckBox assistCHKBX;
+    List<String> coveredRisksList = new ArrayList<>();
+    List<Float> premiumRisksList = new ArrayList<>();
+    List<Float> coverageRisksList = new ArrayList<>();
+    List<Float> ceilingRisksList = new ArrayList<>();
+
     // Constructor
     public MainScreen(){
         CustomizePanel1();
         CustomizePanel2();
+        CustomizePanel3();
     }
 
     private void CustomizePanel1() {
@@ -178,6 +192,42 @@ public class MainScreen extends JFrame {
         p2.setLayout(new GridLayout(14, 1));
         setLayout(null);
         add(p2);
+    }
+    private void CustomizePanel3() {
+        JPanel p3 = new JPanel();
+        TitledBorder titledBorder = BorderFactory.createTitledBorder
+                (BorderFactory.createLineBorder(Color.GRAY, 1),
+                        "  Plan  ", TitledBorder.CENTER,
+                        TitledBorder.DEFAULT_POSITION,
+                        myFont, myColor);
+        p3.setBorder(titledBorder);
+        p3.setBounds(330, 15, 300, 200);
+        p3.setLayout(new GridLayout(6, 1));
+
+        JLabel packageLBL = new JLabel("Please Select your Plan");
+
+        // Checkboxes
+        obligatoryCHKBX = new JCheckBox("Obligatory");
+        allRiskCHKBX = new JCheckBox("All Risks");
+        vDamageCHKBX = new JCheckBox("Vehicle Damage");
+        dDamageCHKBX = new JCheckBox("Driver Damage");
+        assistCHKBX = new JCheckBox("Assistance");
+
+        // Get all risks covered by plan
+        GetRisksCoveredByPlan();
+
+        // Adding components to p3
+        p3.add(packageLBL);
+        p3.add(obligatoryCHKBX);
+        p3.add(allRiskCHKBX);
+        p3.add(vDamageCHKBX);
+        p3.add(dDamageCHKBX);
+        p3.add(assistCHKBX);
+
+        add(p3);
+    }
+
+    private void GetRisksCoveredByPlan() {
     }
 
     public static void main(String[] args){
