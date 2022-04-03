@@ -1,6 +1,9 @@
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -93,11 +96,22 @@ public class MainScreen extends JFrame {
     List<Float> coverageRisksList = new ArrayList<>();
     List<Float> ceilingRisksList = new ArrayList<>();
 
+    // Panel 4
+    JRadioButton yearRadio;
+    JRadioButton yearRadio2;
+    JRadioButton yearRadio3;
+    ButtonGroup G2;
+    JLabel todayLBL;
+    int validityYEAR = 0;
+    SimpleDateFormat df;
+    Date currentDate;
+
     // Constructor
     public MainScreen(){
         CustomizePanel1();
         CustomizePanel2();
         CustomizePanel3();
+        CustomizePanel4();
     }
 
     private void CustomizePanel1() {
@@ -226,7 +240,76 @@ public class MainScreen extends JFrame {
 
         add(p3);
     }
+    private void CustomizePanel4() {
+        JPanel p4 = new JPanel();
+        TitledBorder titledBorder = BorderFactory.createTitledBorder
+                (BorderFactory.createLineBorder(Color.GRAY, 1),
+                        "  Validity Period  ", TitledBorder.CENTER,
+                        TitledBorder.DEFAULT_POSITION,
+                        myFont, myColor);
+        p4.setBorder(titledBorder);
+        p4.setBounds(330, 250, 300, 250);
+        p4.setLayout(new GridLayout(6, 1));
 
+        // Radio Buttons
+        JLabel spacer2 = new JLabel(" ");        spacer2.setOpaque(false);
+        yearRadio = new JRadioButton();
+        yearRadio.setText(" 1 Year");
+        yearRadio2 = new JRadioButton();
+        yearRadio2.setText(" 2 Years");
+        yearRadio3 = new JRadioButton();
+        yearRadio3.setText(" 3 Years");
+
+        yearRadio.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                validityYEAR = 1;
+            }
+        });
+        yearRadio2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                validityYEAR = 2;
+            }
+        });
+        yearRadio3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                validityYEAR  = 3;
+            }
+        });
+
+
+        // Button Group
+        G2 = new ButtonGroup();
+        G2.add(yearRadio);
+        G2.add(yearRadio2);
+        G2.add(yearRadio3);
+
+        // Time & Date
+        todayLBL = new JLabel();
+        df = new SimpleDateFormat("dd/MM/yyyy");
+        currentDate = new Date();
+        todayLBL.setText("Today: " + df.format(currentDate));
+        todayLBL.setOpaque(false);
+
+        Font font = todayLBL.getFont();
+        float size = font.getSize() + 3.0f;
+        todayLBL.setFont(font.deriveFont(size));
+
+        // Adding all components to p4
+        p4.add(spacer2);
+        p4.add(spacer2);
+        p4.add(todayLBL);
+        p4.add(spacer2);
+        p4.add(yearRadio);
+        p4.add(yearRadio2);
+        p4.add(yearRadio3);
+
+        // Adding p4 to jFrame
+        add(p4);
+
+    }
     private void GetRisksCoveredByPlan() {
     }
 
