@@ -69,9 +69,21 @@ public class MainScreen extends JFrame {
     JTextField subCity;
     JTextField subPhone;
 
+    // Panel 2
+    JTextField model;
+    JTextField manufacturer;
+    JTextField plateNo;
+    JTextField estimated;
+    JRadioButton damageRadio1;
+    JRadioButton damageRadio2;
+    JRadioButton damageRadio3;
+    JRadioButton damageRadio4;
+    ButtonGroup G1;
+
     // Constructor
     public MainScreen(){
         CustomizePanel1();
+        CustomizePanel2();
     }
 
     private void CustomizePanel1() {
@@ -109,6 +121,63 @@ public class MainScreen extends JFrame {
         // Adding panels to JFrame
         setLayout(null);
         add(p1);
+    }
+    private void CustomizePanel2() {
+        JPanel p2 = new JPanel();
+        TitledBorder titledBorder = BorderFactory.createTitledBorder
+                (BorderFactory.createLineBorder(Color.GRAY, 1),
+                        "  Vehicle  ", TitledBorder.CENTER,
+                        TitledBorder.DEFAULT_POSITION,
+                        myFont, myColor);
+        p2.setBorder(titledBorder);
+
+        // JLabels p2
+        JLabel plateNoLBL = new JLabel(" Plate No");
+        JLabel modelLBL = new JLabel(" Model Year");
+        JLabel manufacturerLBL = new JLabel(" Manufacturer");
+        JLabel estimatedLBL = new JLabel(" Estimated Value");
+        JLabel spaceLBL = new JLabel(" ");
+        JLabel damageLBL = new JLabel(" Major Damage");
+
+        // JTextFields p2
+        plateNo = new JTextField();            plateNo.setOpaque(false);
+        model = new JTextField();              model.setOpaque(false);
+        manufacturer = new JTextField();       manufacturer.setOpaque(false);
+        estimated = new JTextField();          estimated.setOpaque(false);
+
+        // Radio Buttons p2
+        damageRadio1 = new JRadioButton();     damageRadio1.setText(" Engine");
+        damageRadio2 = new JRadioButton();     damageRadio2.setText(" Wheels");
+        damageRadio3 = new JRadioButton();     damageRadio3.setText(" Body");
+        damageRadio4 = new JRadioButton();     damageRadio4.setText(" None");
+
+        G1 = new ButtonGroup();
+        G1.add(damageRadio1);
+        G1.add(damageRadio2);
+        G1.add(damageRadio3);
+        G1.add(damageRadio4);
+
+        // Adding components to p2
+        p2.add(plateNoLBL);
+        p2.add(plateNo);
+        p2.add(modelLBL);
+        p2.add(model);
+        p2.add(manufacturerLBL);
+        p2.add(manufacturer);
+        p2.add(estimatedLBL);
+        p2.add(estimated);
+        p2.add(spaceLBL);
+        p2.add(damageLBL);
+        p2.add(damageRadio1);
+        p2.add(damageRadio2);
+        p2.add(damageRadio3);
+        p2.add(damageRadio4);
+
+        // Customize p2
+        p2.setBounds(15, 250, 300, 500);
+        p2.setLayout(new GridLayout(14, 1));
+        setLayout(null);
+        add(p2);
     }
 
     public static void main(String[] args){
