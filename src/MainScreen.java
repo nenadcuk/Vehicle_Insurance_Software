@@ -116,6 +116,14 @@ public class MainScreen extends JFrame {
     // Panel 7
     JTextArea policyTXTArea;
 
+    // Panel 8
+    JTextArea customerTXTArea;
+
+    // Panel 9
+    JLabel claimingTXT;
+    JLabel claimingTXT2;
+    JTextField claimingCustomerField;
+
     // Constructor
     public MainScreen(){
         CustomizePanel1();
@@ -125,6 +133,8 @@ public class MainScreen extends JFrame {
         CustomizePanel5();
         CustomizePanel6();
         CustomizePanel7();
+        CustomizePanel8();
+        CustomizePanel9();
     }
 
     private void CustomizePanel1() {
@@ -435,6 +445,84 @@ public class MainScreen extends JFrame {
         p7.add(policyTXTArea);
         p7.setLayout(new GridLayout(1, 1));
         add(p7);
+    }
+    private void CustomizePanel8() {
+        JPanel p8 = new JPanel();
+        TitledBorder titledBorder = BorderFactory.createTitledBorder
+                (BorderFactory.createLineBorder(Color.GRAY, 1),
+                        "  Customer Details  ", TitledBorder.CENTER,
+                        TitledBorder.DEFAULT_POSITION,
+                        myFont, myColor);
+        p8.setBorder(titledBorder);
+        p8.setBounds(645,520,300,230);
+        p8.setLayout(new GridLayout(6,1));
+
+        customerTXTArea = new JTextArea(20,1);
+        customerTXTArea.setEditable(false);
+        customerTXTArea.setOpaque(false);
+        customerTXTArea.setLineWrap(true);
+
+        Font font = customerTXTArea.getFont();
+        float size = font.getSize() + 3.0f;
+        customerTXTArea.setFont(font.deriveFont(size));
+
+        p8.add(customerTXTArea);
+        p8.setLayout(new GridLayout(1,1));
+        add(p8);
+    }
+    private void CustomizePanel9() {
+        JPanel p9 = new JPanel();
+        TitledBorder titledBorder = BorderFactory.createTitledBorder
+                (BorderFactory.createLineBorder(Color.GRAY, 1),
+                        "  Claims  ", TitledBorder.CENTER,
+                        TitledBorder.DEFAULT_POSITION,
+                        myFont, myColor);
+        p9.setBorder(titledBorder);
+        p9.setBounds(960,15,300,485);
+
+        claimingTXT = new JLabel("Enter Plate No. for the Claiming Customer");
+        JLabel spacer7 = new JLabel("                                                        ");
+        claimingTXT2 = new JLabel("Select the Type of Damage or Assistance Needed");
+
+        claimingCustomerField = new JTextField();
+        claimingCustomerField.setPreferredSize(new Dimension(250, 30));
+        claimingCustomerField.setOpaque(false);
+
+        String[] items = { "Fire", "Robbery", "Third Party Damage", "Vehicle Damage",
+                            "Driver Damage", "Transport", "Car Replacement"};
+
+        final JList claimList = new JList<>(items);
+
+        claimList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        claimList.setOpaque(false);
+        claimList.setPreferredSize(new Dimension(250,150));
+
+        JButton searchClaimer = new JButton("Search Claimer(Customer)");
+        List<String> coveredRisksByUserLIST = new ArrayList<>();
+        searchClaimer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        JButton confirmClaimBTN = new JButton("  Confirm Claim  ");
+        confirmClaimBTN.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        p9.add(claimingTXT);
+        p9.add(claimingCustomerField);
+        p9.add(searchClaimer);
+        p9.add(spacer7);
+        p9.add(claimingTXT2);
+        p9.add(claimList);
+        p9.add(confirmClaimBTN);
+        add(p9);
+
     }
 
     private void GetRisksCoveredByPlan() {
