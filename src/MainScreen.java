@@ -112,6 +112,7 @@ public class MainScreen extends JFrame {
         CustomizePanel2();
         CustomizePanel3();
         CustomizePanel4();
+        CustomizePanel5();
     }
 
     private void CustomizePanel1() {
@@ -310,6 +311,72 @@ public class MainScreen extends JFrame {
         add(p4);
 
     }
+    private void CustomizePanel5() {
+        JPanel p5 = new JPanel();
+        TitledBorder titledBorder = BorderFactory.createTitledBorder
+                (BorderFactory.createLineBorder(Color.GRAY, 1),
+                        "  Actions  ", TitledBorder.CENTER,
+                        TitledBorder.DEFAULT_POSITION,
+                        myFont, myColor);
+        p5.setBorder(titledBorder);
+        p5.setBounds(330,520,300,230);
+        p5.setLayout(new GridLayout(7, 1));
+
+        JButton saveBTN = new JButton("Save Customer");
+        JButton showBTN = new JButton("Show Plan Details");
+        JButton loadBTN = new JButton("Load Customer");
+        JButton newBTN = new JButton("New Customer");
+
+        JTextField searchTXT = new JTextField("Enter Car Plate No");
+        searchTXT.setOpaque(false);
+
+        showBTN.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+
+        saveBTN.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+
+        JLabel spacer3 = new JLabel(" ");
+        spacer3.setOpaque(false);
+
+        loadBTN.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        JLabel spacer4 = new JLabel(" ");
+        spacer4.setOpaque(false);
+        JLabel spacer5 = new JLabel(" ");
+        spacer5.setOpaque(false);
+        JLabel spacer6 = new JLabel(" ");
+        spacer6.setOpaque(false);
+
+        newBTN.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        p5.add(spacer6);
+        p5.add(showBTN);
+        p5.add(saveBTN);
+        p5.add(newBTN);
+        p5.add(spacer5);
+        p5.add(searchTXT);
+        p5.add(loadBTN);
+
+        add(p5);
+    }
+
     private void GetRisksCoveredByPlan() {
     }
 
