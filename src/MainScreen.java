@@ -1,3 +1,5 @@
+import Policy.Customer;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -106,6 +108,14 @@ public class MainScreen extends JFrame {
     SimpleDateFormat df;
     Date currentDate;
 
+    // Panel 5
+    JTextArea risksTXTArea;
+    JTextField searchTXT;
+    Map<Integer, Customer> customerMap = new TreeMap<>();
+
+    // Panel 7
+    JTextArea policyTXTArea;
+
     // Constructor
     public MainScreen(){
         CustomizePanel1();
@@ -113,6 +123,8 @@ public class MainScreen extends JFrame {
         CustomizePanel3();
         CustomizePanel4();
         CustomizePanel5();
+        CustomizePanel6();
+        CustomizePanel7();
     }
 
     private void CustomizePanel1() {
@@ -375,6 +387,54 @@ public class MainScreen extends JFrame {
         p5.add(loadBTN);
 
         add(p5);
+    }
+    private void CustomizePanel6() {
+        JPanel p6 = new JPanel();
+        TitledBorder titledBorder = BorderFactory.createTitledBorder
+                (BorderFactory.createLineBorder(Color.GRAY, 1),
+                        "  Covered Risks  ", TitledBorder.CENTER,
+                        TitledBorder.DEFAULT_POSITION,
+                        myFont, myColor);
+        p6.setBorder(titledBorder);
+        p6.setBounds(645, 15, 300, 200);
+
+        risksTXTArea = new JTextArea(7, 1);
+        risksTXTArea.setEditable(false);
+        risksTXTArea.setOpaque(false);
+        risksTXTArea.setLineWrap(true);
+
+        // Font
+        Font font = risksTXTArea.getFont();
+        float size = font.getSize() + 3.0f;
+        risksTXTArea.setFont(font.deriveFont(size));
+
+        p6.add(risksTXTArea);
+        p6.setLayout(new GridLayout(1, 1));
+        add(p6);
+    }
+    private void CustomizePanel7() {
+        JPanel p7 = new JPanel();
+        TitledBorder titledBorder = BorderFactory.createTitledBorder
+                (BorderFactory.createLineBorder(Color.GRAY, 1),
+                        "  Policy Details  ", TitledBorder.CENTER,
+                        TitledBorder.DEFAULT_POSITION,
+                        myFont, myColor);
+        p7.setBorder(titledBorder);
+        p7.setBounds(645, 250, 300, 250);
+        p7.setLayout(new GridLayout(6,1));
+
+        policyTXTArea = new JTextArea(20,1);
+        policyTXTArea.setEditable(false);
+        policyTXTArea.setOpaque(false);
+        policyTXTArea.setLineWrap(true);
+
+        Font font = policyTXTArea.getFont();
+        float size = font.getSize() + 3.0f;
+        policyTXTArea.setFont(font.deriveFont(size));
+
+        p7.add(policyTXTArea);
+        p7.setLayout(new GridLayout(1, 1));
+        add(p7);
     }
 
     private void GetRisksCoveredByPlan() {
