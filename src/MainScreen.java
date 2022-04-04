@@ -623,7 +623,7 @@ public class MainScreen extends JFrame {
         mainScreen.setVisible(true);
         mainScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainScreen.setTitle("Insurance Company System");
-        mainScreen.setBounds(0, 0, 1920, 1080);
+        mainScreen.setBounds(0, 0, 1555, 810);
     }
 
 }
