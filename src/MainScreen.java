@@ -2,14 +2,17 @@ import Plan.*;
 import Policy.Customer;
 import Policy.Policy;
 import Policy.Vehicle;
+import com.sun.source.tree.Tree;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
 
@@ -648,7 +651,21 @@ public class MainScreen extends JFrame {
 
 
     // Get Policy Data
-    public Policy GetPolicyData(){};
+    public Policy GetPolicyData() throws ParseException{
+        currentDate = new Date();
+
+        LocalDate now = LocalDate.now();
+        Policy policy = new Policy(
+                GetVehicleData(),
+                coveredRisksList,
+                premiumRisksList,
+                coverageRisksList,
+                ceilingRisksList,
+                validityYEAR,
+                now );
+
+        return policy;
+    };
 
     // Get Damage Data
     public int GetDamageState(){
@@ -737,6 +754,97 @@ public class MainScreen extends JFrame {
 
 
     }
+
+    // Save Data to Disk
+    public void SaveCustomerMapToDisk() throws IOException, ClassNotFoundException, ParseException {
+        File file = new File("C:/myfile.dat");
+        int plateNmb = Integer.parseInt(plateNo.getText());
+
+        if (!file.exists()){
+            // Creating a new file
+            System.out.println("File doesn't exist");
+            file.createNewFile();
+
+            SaveCustomerMapToNewFile(plateNmb, file);
+        }else {
+            // if the file exists
+            TreeMap<Integer, Customer> newMapToSave = new TreeMap<>();
+            InputStream is = new FileInputStream(file);
+            ObjectInputStream ois = new ObjectInputStream(is);
+
+            TreeMap<Integer, Customer> mapInFile = (TreeMap<Integer, Customer>) ois.readObject();
+            ois.close();
+            is.close();
+
+            // Get Old map
+            for (Map.Entry<Integer, Customer> m : mapInFile.entrySet()){
+                newMapToSave.put(m.getKey(), m.getValue());
+            }
+
+            // Updating the map: Adding new Customer to map
+            newMapToSave.put(plateNmb, GetCustomerData());
+
+            // Saving the updates to file
+            OutputStream os = new FileOutputStream(file);
+            ObjectOutputStream oos = new ObjectOutputStream(os);
+            oos.writeObject(newMapToSave);
+            oos.flush();
+            oos.close();
+        }
+    }
+
+    private void SaveCustomerMapToNewFile(int plateNmb, File file) throws ParseException, IOException {
+        TreeMap<Integer, Customer> newMapToSave = new TreeMap<>();
+
+        // Adding new Customer to map
+        newMapToSave.put(plateNmb, GetCustomerData());
+
+        OutputStream os = new FileOutputStream(file);
+        ObjectOutputStream oos = new ObjectOutputStream(os);
+        oos.writeObject(newMapToSave);
+        oos.flush();
+        oos.close();
+    }
+
+    // Resetting Fields to Empty
+    private void NewCustomerMethod(){
+        coveredRisksList.clear();
+        coverageRisksList.clear();
+        premiumRisksList.clear();
+        ceilingRisksList.clear();
+        cond1 = false;
+        cond2 = false;
+        cond3 = false;
+
+        // Set text fields to empty
+        subFName.setText("");
+        subLName.setText("");
+        subCity.setText("");
+        subPhone.setText("");
+
+        plateNo.setText("");
+        model.setText("");
+        manufacturer.setText("");
+        estimated.setText("");
+
+        // Set Radio Button selection to false
+        G1.clearSelection();
+        G2.clearSelection();
+
+        // Reset Checkboxes
+        obligatoryCHKBX.setSelected(false);
+        allRiskCHKBX.setSelected(false);
+        vDamageCHKBX.setSelected(false);
+        dDamageCHKBX.setSelected(false);
+        assistCHKBX.setSelected(false);
+
+        dDamageCHKBX.setSelected(true);
+        allRiskCHKBX.setSelected(true);
+        vDamageCHKBX.setSelected(true);
+        dDamageCHKBX.setSelected(true);
+        assistCHKBX.setSelected(true);
+    }
+
 
     public static void main(String[] args){
         MainScreen mainScreen = new MainScreen();
