@@ -124,6 +124,25 @@ public class MainScreen extends JFrame {
     JLabel claimingTXT2;
     JTextField claimingCustomerField;
 
+    // Panel 10
+    JLabel claimingCustomerNameLBL;
+    JLabel claimStatusLBL;
+    JTextArea claimingCustomerRisksCoveredTXTArea;
+    JLabel claimingCustomerValidDateLBL;
+    boolean cond1;
+    boolean cond2;
+    boolean cond3;
+
+    // Panel 11
+    JTextArea settlementsTXTArea;
+    float totalPremium = 0f;
+    float totalCoverage = 0f;
+    float totalCeiling = 0f;
+
+    // Panel 12
+    JTextArea settlementsTXTArea2;
+
+
     // Constructor
     public MainScreen(){
         CustomizePanel1();
@@ -135,6 +154,9 @@ public class MainScreen extends JFrame {
         CustomizePanel7();
         CustomizePanel8();
         CustomizePanel9();
+        CustomizePanel10();
+        CustomizePanel11();
+        CustomizePanel12();
     }
 
     private void CustomizePanel1() {
@@ -523,6 +545,74 @@ public class MainScreen extends JFrame {
         p9.add(confirmClaimBTN);
         add(p9);
 
+    }
+    private void CustomizePanel10() {
+        JPanel p10 = new JPanel();
+        TitledBorder titledBorder = BorderFactory.createTitledBorder
+                (BorderFactory.createLineBorder(Color.GRAY, 1),
+                        "  Claim Status  ", TitledBorder.CENTER,
+                        TitledBorder.DEFAULT_POSITION,
+                        myFont, myColor);
+        p10.setBorder(titledBorder);
+        p10.setBounds(960,520,300,230);
+        p10.setLayout(new GridLayout(4,1));
+
+        claimingCustomerNameLBL = new JLabel("Claiming Customer: ");
+        claimingCustomerValidDateLBL = new JLabel("Validity Date of Policy: ");
+        claimStatusLBL = new JLabel("Claiming Status: ");
+
+        claimingCustomerRisksCoveredTXTArea = new JTextArea();
+        JScrollPane pictureScrollPane = new JScrollPane(claimingCustomerRisksCoveredTXTArea);
+        claimingCustomerRisksCoveredTXTArea.setOpaque(false);
+
+        p10.add(claimingCustomerNameLBL);
+        p10.add(claimingCustomerValidDateLBL);
+        p10.add(pictureScrollPane);
+        p10.add(claimStatusLBL);
+        add(p10);
+
+    }
+    private void CustomizePanel11() {
+        JPanel p11 = new JPanel();
+        TitledBorder titledBorder = BorderFactory.createTitledBorder
+                (BorderFactory.createLineBorder(Color.GRAY, 1),
+                        "  Payments  ", TitledBorder.CENTER,
+                        TitledBorder.DEFAULT_POSITION,
+                        myFont, myColor);
+        p11.setBorder(titledBorder);
+        p11.setBounds(1275,15,250,230);
+        p11.setLayout(new GridLayout(2,1));
+
+        settlementsTXTArea = new JTextArea();
+        settlementsTXTArea.setOpaque(false);
+
+        Font font = settlementsTXTArea.getFont();
+        float size = font.getSize() + 4.0f;
+        settlementsTXTArea.setFont(font.deriveFont(size));
+
+        p11.add(settlementsTXTArea);
+        add(p11);
+    }
+    private void CustomizePanel12() {
+        JPanel p12 = new JPanel();
+        TitledBorder titledBorder = BorderFactory.createTitledBorder
+                (BorderFactory.createLineBorder(Color.GRAY, 1),
+                        "  Settlements  ", TitledBorder.CENTER,
+                        TitledBorder.DEFAULT_POSITION,
+                        myFont, myColor);
+        p12.setBorder(titledBorder);
+        p12.setBounds(1275,250,250,500);
+        p12.setLayout(new GridLayout());
+
+        settlementsTXTArea2 = new JTextArea();
+        settlementsTXTArea2.setOpaque(false);
+
+        Font font = settlementsTXTArea.getFont();
+        float size = font.getSize() + 4.0f;
+        settlementsTXTArea.setFont(font.deriveFont(size));
+
+        p12.add(settlementsTXTArea2);
+        add(p12);
     }
 
     private void GetRisksCoveredByPlan() {
