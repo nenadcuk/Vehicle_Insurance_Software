@@ -63,7 +63,7 @@ public class Vehicle implements Serializable {
         return  "Plate No: " + plateNo +
                 "\nModel Year: " + modelYear +
                 "\nManufacturer: " + manufacturer +
-                "\nEstimated Value: " + estimatedValue +
+                "\nEstimated Value: " + estimatedValue + "$" +
                 "\nCar Damage Level: " + carDamage;
     }
 }

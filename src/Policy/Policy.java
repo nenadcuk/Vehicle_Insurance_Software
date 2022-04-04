@@ -64,7 +64,7 @@ public class Policy implements Serializable {
     @Override
     public String toString() {
         return  "Policy No: " + policyNo +
-                "\nVehicle: " + vehicle +
+                "\n" + vehicle +
                 "\nValidity Year: " + validityYear;
     }
 }

@@ -378,18 +378,40 @@ public class MainScreen extends JFrame {
         JButton loadBTN = new JButton("Load Customer");
         JButton newBTN = new JButton("New Customer");
 
-        JTextField searchTXT = new JTextField("Enter Car Plate No");
+        searchTXT = new JTextField("Enter Car Plate No");
         searchTXT.setOpaque(false);
 
         showBTN.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String str = "";
+                for (int i=0; i<coveredRisksList.size(); i++){
+                    str += coveredRisksList.get(i) + "\n";
+                }
+                risksTXTArea.setText(str);
+
+                try {
+                    policyTXTArea.setText(GetPolicyData().toString());
+                    DisplayPaymentsOfPolicy();
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 
         saveBTN.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                try{
+                    SaveCustomerMapToDisk();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                } catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 
@@ -399,7 +421,7 @@ public class MainScreen extends JFrame {
         loadBTN.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                SearchCustomerByMobileNo();
             }
         });
 
@@ -413,7 +435,7 @@ public class MainScreen extends JFrame {
         newBTN.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                NewCustomerMethod();
             }
         });
 
@@ -531,7 +553,37 @@ public class MainScreen extends JFrame {
         searchClaimer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                cond1 = false;  // Is Customer registered before in our DB
+                cond2 = false;  // Is the customer's policy cover the claimed risk
+                cond3 = false;  // Is the policy date valid
 
+                try {
+                    coveredRisksByUserLIST.clear();
+                    Customer c = ClaimsSearchedCustomerByMobileNo();
+                    claimingCustomerNameLBL.setText("Claiming Customer: " + c.getFirstName() + " " + c.getLastName());
+                    cond1 = true;
+
+                    String str2 = "";
+                    for (int i=0; i<c.getPolicy().getRisksCoveredList().size(); i++){
+                        str2 += c.getPolicy().getRisksCoveredList().get(i) + "\n";
+                        coveredRisksByUserLIST.add(c.getPolicy().getRisksCoveredList().get(i));
+                    }
+
+                    LocalDate v_validityOfPolicy = c.getPolicy().getPolicyDate();
+                    int v_policyValidityYears = c.getPolicy().getValidityYear();
+                    v_validityOfPolicy = v_validityOfPolicy.plusYears(v_policyValidityYears);
+
+                    CheckPolicyValidity(v_validityOfPolicy);
+                    claimingCustomerRisksCoveredTXTArea.setText("Covered Risks by Customer plan:\n" + str2);
+                    claimingCustomerValidDateLBL.setText("Date Validity of Policy: " + v_validityOfPolicy + " || " + CheckPolicyValidity(v_validityOfPolicy));
+
+                    if (c.getPolicy().getRisksCoveredList().size() >= 5){
+                        // If the user has a all-risks plan
+                        cond2 = true;
+                    }
+                }catch (Exception ex){
+                    claimingCustomerNameLBL.setText("Claiming Customer: Not Found!");
+                }
             }
         });
 
@@ -539,7 +591,60 @@ public class MainScreen extends JFrame {
         confirmClaimBTN.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Get the index of all the selected items
+                int[] selectedIndex = claimList.getSelectedIndices();
+                List<String> claimed_list = new ArrayList<>();
 
+                if (claimList.getSelectedIndex() != -1) {
+                    for (int i = 0; i < selectedIndex.length; i++) {
+                        String k = "" + claimList.getModel().getElementAt(selectedIndex[i]) + " ";
+                        claimed_list.add("" + claimList.getModel().getElementAt(selectedIndex[i]));
+                        System.out.println("" + k);
+                    }
+                }
+
+                // Check for the included risks
+                if (cond2 == false) {
+                    cond2 = claimed_list.containsAll(coveredRisksByUserLIST);
+                }
+
+                // Check for claim validity to add the claim to the customer,
+                // claims map on other file myfile2
+                ClaimIsValid();
+
+                // Display Settlements
+                Customer c = ClaimsSearchedCustomerByMobileNo();
+                if (ClaimIsValid()) {
+                    int claims_nb = claimed_list.size();
+                    if (claimed_list.contains("Fire")) {
+                        settlementsTXTArea2.setText(
+                                "Fire Department: " + c.getPolicy().getVehicle().getEstimatedValue() * 0.25 + "$");
+                    } else if (claimed_list.contains("Robbery")) {
+                        settlementsTXTArea2.setText("ProSec Company: " + c.getPolicy().getVehicle().getEstimatedValue() * 0.5 + "$\n" +
+                                "Pay for Customer: " + c.getPolicy().getVehicle().getEstimatedValue() * 1 + "$");
+
+                    } else if (claimed_list.contains("Third Party Damage")) {
+                        settlementsTXTArea2.setText("Driver in other car: " + 2000 + "$");
+
+                    } else if (claimed_list.contains("Vehicle Damage")) {
+                        settlementsTXTArea2.setText("Pay for Customer: " + c.getPolicy().getVehicle().getEstimatedValue() * 1 + "$");
+
+                    } else if (claimed_list.contains("Driver Damage")) {
+                        settlementsTXTArea2.setText("Pay for Customer: " + c.getPolicy().getVehicle().getEstimatedValue() * 10 + "$");
+
+                    } else if (claimed_list.contains("Transport")) {
+                        settlementsTXTArea2.setText("Transport Company: " + c.getPolicy().getVehicle().getEstimatedValue() * 0.5 + "$");
+
+                    } else if (claimed_list.contains("Car Replacement")) {
+                        settlementsTXTArea2.setText("Car Rental Company" + c.getPolicy().getVehicle().getEstimatedValue() * 0.2 + "$");
+
+                    } else if (claims_nb > 2) {
+                        settlementsTXTArea2.setText("Driver: " + c.getPolicy().getVehicle().getEstimatedValue() * 4 + "$" +
+                                "Hospital: " + c.getPolicy().getVehicle().getEstimatedValue() * 4 + "$" +
+                                "Car Rental Company: " + c.getPolicy().getVehicle().getEstimatedValue() * 0.2 + "$" +
+                                "Third Party Driver: " + c.getPolicy().getVehicle().getEstimatedValue() * 2 + "$");
+                    }
+                }
             }
         });
 
@@ -648,8 +753,6 @@ public class MainScreen extends JFrame {
         return vehicle;
     }
 
-
-
     // Get Policy Data
     public Policy GetPolicyData() throws ParseException{
         currentDate = new Date();
@@ -757,7 +860,7 @@ public class MainScreen extends JFrame {
 
     // Save Data to Disk
     public void SaveCustomerMapToDisk() throws IOException, ClassNotFoundException, ParseException {
-        File file = new File("C:/myfile.dat");
+        File file = new File("E:/myfile.dat");
         int plateNmb = Integer.parseInt(plateNo.getText());
 
         if (!file.exists()){
@@ -838,13 +941,97 @@ public class MainScreen extends JFrame {
         dDamageCHKBX.setSelected(false);
         assistCHKBX.setSelected(false);
 
-        dDamageCHKBX.setSelected(true);
-        allRiskCHKBX.setSelected(true);
-        vDamageCHKBX.setSelected(true);
-        dDamageCHKBX.setSelected(true);
-        assistCHKBX.setSelected(true);
+        obligatoryCHKBX.setEnabled(true);
+        allRiskCHKBX.setEnabled(true);
+        vDamageCHKBX.setEnabled(true);
+        dDamageCHKBX.setEnabled(true);
+        assistCHKBX.setEnabled(true);
     }
 
+    private void SearchCustomerByMobileNo(){
+        File file = new File("E:/myfile.dat");
+
+        try{
+            InputStream is = new FileInputStream(file);
+            ObjectInputStream ois = new ObjectInputStream(is);
+
+            TreeMap<Integer, Customer> mapInFile = (TreeMap<Integer, Customer>) ois.readObject();
+
+            ois.close();
+            is.close();
+
+            Customer c_finded = mapInFile.get(Integer.parseInt(searchTXT.getText()));
+            customerTXTArea.setText(c_finded.toString());
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private Customer ClaimsSearchedCustomerByMobileNo(){
+        Customer customer = new Customer();
+        File file = new File("E:/myfile.dat");
+
+        try {
+            InputStream is = new FileInputStream(file);
+            ObjectInputStream ois = new ObjectInputStream(is);
+
+            TreeMap<Integer, Customer> mapInFile = (TreeMap<Integer, Customer>) ois.readObject();
+            ois.close();
+            is.close();
+
+            customer = mapInFile.get(Integer.parseInt(claimingCustomerField.getText()));
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return customer;
+    }
+
+    private boolean CheckPolicyValidity(LocalDate v_validityOfPolicy){
+        LocalDate now = LocalDate.now();
+
+        if (now.isBefore(v_validityOfPolicy)){
+            cond3 = true;
+            return true;
+        }else {
+            cond3 = false;
+            return false;
+        }
+    }
+
+    private boolean ClaimIsValid(){
+        if (cond1 == true && cond2 == true && cond3 == true){
+            claimStatusLBL.setText("Claiming Status: You can register the Claim.");
+            return true;
+        }else {
+            claimStatusLBL.setText("Claiming Status: Not able to register the Claim.");
+            return false;
+        }
+    }
+
+    private void DisplayPaymentsOfPolicy(){
+        for (int i=0; i<premiumRisksList.size(); i++){
+            totalPremium += premiumRisksList.get(i);
+            totalCoverage += coverageRisksList.get(i);
+            totalCeiling += ceilingRisksList.get(i);
+        }
+
+        settlementsTXTArea.setText(
+                "Total Premium: " + totalPremium*Integer.parseInt(estimated.getText()) + "$ \n" +
+                "Risks Coverage: " + totalCoverage*Integer.parseInt(estimated.getText())*10 + "$ \n" +
+                "Maximum Ceiling: " + totalCeiling*Integer.parseInt(estimated.getText()) + 100000 + "$ \n");
+    }
 
     public static void main(String[] args){
         MainScreen mainScreen = new MainScreen();
